@@ -7,6 +7,8 @@ import Contact from './pages/Contact'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import  Navbar  from './components/Navbar'
+import Footer from './components/Footer'
+import Error from './pages/Error'
 
 
 const App = () => {
@@ -21,7 +23,10 @@ const App = () => {
         <Route path='/contact' element={<Contact />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
+        {/* wildcard  */}
+      <Route path='*'  element={<Error />}/>
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
