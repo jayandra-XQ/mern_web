@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import registerImg from '../images/register.png'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../store/auth'
 
 const Register = () => {
+
+  const navigate = useNavigate()
 
   const [user, setUser] = useState({
     username: '',
@@ -10,7 +14,10 @@ const Register = () => {
     password: ''
   })
 
+  const {storeTokenInLS} = useAuth()
+
   const handleInput = (e) => {
+    console.log(e)
     let name = e.target.name;
     let value = e.target.value;
 
@@ -20,8 +27,41 @@ const Register = () => {
     })
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    console.log(user)
+
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user),
+      });
+      console.log("response data :", response)
+
+      if (response.ok) {
+        const res_data = await response.json()
+
+        //stored token in local storage
+        storeTokenInLS(res_data.token)
+
+        setUser({
+          username: '',
+          email: '',
+          phone: '',
+          password: ''
+        })
+        navigate('/login')
+      }
+
+
+    } catch (error) {
+      console.log("registration", error)
+    }
+
+
   };
 
   return (
@@ -49,9 +89,7 @@ const Register = () => {
                     <input
                       type="text "
                       name='username'
-                      placeholder='username'
-                      id='username'
-                      required
+
                       autoComplete='off'
                       value={user.username}
                       onChange={handleInput}
@@ -63,10 +101,7 @@ const Register = () => {
                     <input
                       type="email "
                       name='email'
-                      placeholder=' Enter your email'
-                      id='email'
                       required
-                      autoComplete='off'
                       value={user.email}
                       onChange={handleInput}
 
@@ -78,10 +113,9 @@ const Register = () => {
                     <input
                       type="number"
                       name='phone'
-                      placeholder='phone'
-                      id='phone'
+                      
                       required
-                      autoComplete='off'
+                      
                       value={user.phone}
                       onChange={handleInput}
                     />
@@ -90,12 +124,11 @@ const Register = () => {
                   <div>
                     <label htmlFor="password">password</label>
                     <input
-                      type="text "
+                      type="password "
                       name='password'
-                      placeholder='password'
-                      id='password'
+                      
                       required
-                      autoComplete='off'
+                      
                       value={user.password}
                       onChange={handleInput}
 

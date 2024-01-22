@@ -1,14 +1,17 @@
 import Analytics from '../components/Analytics'
 import aboutImage from '../images/about.png'
+import {useAuth } from '../store/auth'
 
 const About = () => {
+
+  const {user } = useAuth()
   return (
     <>
       <main>
         <section className="section-hero">
           <div className="container grid grid-two-cols">
             <div className="hero-content">
-              <p>Welcome. hamal Technical</p>
+              <p>welcome,  {user ? `${user.username} to our website`: `to our website`  }</p>
               <h1>Why Choose Us?</h1>
               <p>
                 Expertise: Our team consists of experienced IT professionals who are

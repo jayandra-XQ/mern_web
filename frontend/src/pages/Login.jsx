@@ -1,12 +1,18 @@
 import { useState } from 'react'
 import loginImg from '../images/login.png'
+import {useNavigate} from 'react-router-dom'
+import { useAuth } from '../store/auth'
 
 const Login = () => {
+
+  const navigate = useNavigate()
 
   const [user, setUser] = useState({
     email: '',
     password: ''
   })
+
+  const {storeTokenInLS} = useAuth()
 
   const handleLogin = (e) => {
     let name = e.target.name;
@@ -20,9 +26,38 @@ const Login = () => {
   }
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     console.log(user)
+
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      });
+
+      if(response.ok) {
+
+        const res_data = await response.json();
+
+        storeTokenInLS(res_data.token)
+        
+        setUser({
+          email: '',
+          password: '',
+        })
+        navigate('/');
+  } else {
+    alert('invalid credentials')
+  }
+
+
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 
@@ -55,8 +90,7 @@ const Login = () => {
                     <input
                       type="email"
                       name="email"
-                      placeholder='Enter Your Email'
-                      id='email'
+                     
                       required
                       autoComplete='off'
                       value={user.email}
@@ -70,8 +104,7 @@ const Login = () => {
                     <input
                       type="password"
                       name='password'
-                      placeholder='Enter Your Password'
-                      id='password'
+                      
                       required
                       autoComplete='off'
                       value={user.password}

@@ -1,14 +1,31 @@
 import { useState } from 'react';
 import contactImage from '../images/network.png'
+import { useAuth } from '../store/auth'
+
+const defaultContactFormData =  {
+  username: '',
+  email: '',
+  message: ''
+}
 
 
 const Contact = () => {
 
-  const [contact, setContact] = useState({
-    username: '',
-    email: '',
-    message: ''
-  })
+  const [contact, setContact] = useState(defaultContactFormData)
+
+  const [userData, setUserData] = useState(true)
+
+  const { user } = useAuth()
+
+  if (userData && user) {
+    setContact({
+      username: user.username,
+      email: user.email,
+      message: ""
+    })
+
+    setUserData(false)
+  }
 
 
 
@@ -24,8 +41,25 @@ const Contact = () => {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+
+    try {
+      const response = await fetch ("http://localhost:5000/api/form/contact", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(contact)
+      });
+
+      if(response.ok) {
+        setContact(defaultContactFormData)
+        alert('Message send successfully');
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
