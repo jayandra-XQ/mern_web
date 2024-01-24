@@ -2,6 +2,7 @@ import { useState } from 'react'
 import registerImg from '../images/register.png'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../store/auth'
+import {toast} from 'react-toastify'
 
 const Register = () => {
 
@@ -14,7 +15,7 @@ const Register = () => {
     password: ''
   })
 
-  const {storeTokenInLS} = useAuth()
+  const { storeTokenInLS } = useAuth()
 
   const handleInput = (e) => {
     console.log(e)
@@ -39,10 +40,11 @@ const Register = () => {
         },
         body: JSON.stringify(user),
       });
-      console.log("response data :", response)
+
+      const res_data = await response.json()
+      console.log("res from the sever", res_data.msg);
 
       if (response.ok) {
-        const res_data = await response.json()
 
         //stored token in local storage
         storeTokenInLS(res_data.token)
@@ -53,7 +55,12 @@ const Register = () => {
           phone: '',
           password: ''
         })
-        navigate('/login')
+        toast.success(
+          "Regisstration successful"
+        );
+        navigate('/')
+      } else {
+        toast.error(res_data.extraDetails ? res_data.extradDetails : res_data.message)
       }
 
 
@@ -113,9 +120,9 @@ const Register = () => {
                     <input
                       type="number"
                       name='phone'
-                      
+
                       required
-                      
+
                       value={user.phone}
                       onChange={handleInput}
                     />
@@ -126,9 +133,9 @@ const Register = () => {
                     <input
                       type="password "
                       name='password'
-                      
+
                       required
-                      
+
                       value={user.password}
                       onChange={handleInput}
 

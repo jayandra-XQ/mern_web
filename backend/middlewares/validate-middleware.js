@@ -15,7 +15,7 @@ const validate = (schema) => async (req,res,next) => {
           extraDetails,
         };
     
-        next(extraDetails);
+        next(error);
     }
 };
 
