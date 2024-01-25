@@ -7,6 +7,7 @@ const serviceRoute = require('./router/service-router')
 const connectDb = require('./utils/db')
 const errorMiddleware = require("./middlewares/error-middleware")
 const cors = require('cors')
+const adminRoute = require('./router/admin-router')
 const PORT = 5000;
 
 const corsOptions = {
@@ -25,6 +26,7 @@ app.use(express.json())
 app.use('/api/auth', authRoute)
 app.use('/api/form', contactRoute)
 app.use('/api/data', serviceRoute)
+app.use('/api/admin', adminRoute)
 
 
 
