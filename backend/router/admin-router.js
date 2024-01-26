@@ -1,11 +1,12 @@
 const express = require('express')
-const getAllUsers = require('../controllers/admin-controller')
-const getAllContacts = require('../controllers/admin-controller')
-
 const router = express.Router()
 
-router.get('/users', getAllUsers)
-router.get('/contacts', getAllContacts);
+const adminController = require('../controllers/admin-controller')
+const authMiddleware = require('../middlewares/auth-middleware')
+
+
+router.get('/users', authMiddleware, adminController.getAllUsers)
+router.get('/contacts', authMiddleware, adminController.getAllContacts);
 
 
 

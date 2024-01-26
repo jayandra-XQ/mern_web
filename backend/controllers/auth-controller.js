@@ -60,7 +60,7 @@ const login = async (req,res) => {
                 userId: userExit._id.toString()
             })
         } else {
-            res.status(401).json({msg: "Invalid email or password"})
+            res.status(401).json({message: "Invalid email or password"})
         }
 
     } catch (error) {
