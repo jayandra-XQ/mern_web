@@ -10,6 +10,9 @@ import  Navbar  from './components/Navbar'
 import Footer from './components/Footer'
 import Error from './pages/Error'
 import Logout from './pages/Logout'
+import AdminLayout from './components/layouts/Admin-Layout'
+import AdminUsers from './pages/Admin-Users'
+import AdminContacts from './pages/Admin-Contacts'
 
 
 const App = () => {
@@ -27,6 +30,12 @@ const App = () => {
         <Route path='/logout' element={<Logout />} />
          {/* wildcard  */}
       <Route path='*'  element={<Error />}/>
+
+      <Route path="/admin" element={<AdminLayout />}>
+         <Route path='users' element={<AdminUsers />} />
+         <Route path='contact' element={<AdminContacts />} />
+      </Route>
+
       </Routes>
       <Footer />
     </BrowserRouter>

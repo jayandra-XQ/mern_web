@@ -2,11 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('token'))
 
     const [user, setUser] = useState("")
     const [services, setServices] = useState([])
+
+
+    const authorizationToken = `Bearer ${token}`
 
     const storeTokenInLS = (serverToken) => {
         setToken(serverToken)
@@ -25,15 +28,15 @@ export const AuthProvider = ({children}) => {
 
     const userAuthentication = async () => {
         try {
-            const response = await fetch ("http://localhost:5000/api/auth/user", {
+            const response = await fetch("http://localhost:5000/api/auth/user", {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': authorizationToken,
                     'Content-Type': 'application/json',
                 },
             })
 
-            if(response.ok) {
+            if (response.ok) {
                 const data = await response.json();
                 setUser(data.userData)
 
@@ -50,7 +53,7 @@ export const AuthProvider = ({children}) => {
                 method: "GET",
             });
 
-            if(response.ok) {
+            if (response.ok) {
                 const services = await response.json();
                 console.log(services)
                 setServices(services.msg)
@@ -61,21 +64,21 @@ export const AuthProvider = ({children}) => {
     }
 
 
-    useEffect(()=> {
+    useEffect(() => {
         getServices();
         userAuthentication();
     }, [])
 
     return (
-        <AuthContext.Provider value={{storeTokenInLS, LogoutUser, isLoggedIn, user, services}}>
-        {children}
-    </AuthContext.Provider>
+        <AuthContext.Provider value={{ storeTokenInLS, LogoutUser, isLoggedIn, user, services, authorizationToken }}>
+            {children}
+        </AuthContext.Provider>
     )
 }
 
 export const useAuth = () => {
     const authContextvalue = useContext(AuthContext);
-    if(!authContextvalue) {
+    if (!authContextvalue) {
         throw new Error("useAuth used outside of the provider")
     }
 
