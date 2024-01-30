@@ -27,4 +27,39 @@ const getAllContacts = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, getAllContacts }
+const updateUserById = async (req,res) => {
+    try {
+        const id = req.params.id;
+        const updatedUserData = req.body;
+
+        const updatedData = await User.updateOne({_id:id}, {
+            $set: updatedUserData
+        })
+
+        return res.status(200).json(updatedData)
+    } catch (error) {
+        next(error)
+    }
+}
+
+const getUserByID = async (req,res ) => {
+    try {
+        const id = req.params.id;
+        const data = await User.findOne({_id: id}, {password: 0})
+        return res.status(200).json(data)
+    } catch (error) {
+        next(error)
+    }
+}
+
+const deleteUserById = async (req,res) => {
+    try {
+        const id = req.params.id;
+        await User.deleteOne({_id: id});
+        return res.status(200).json({ message: 'User Delete Succesfully'});
+    } catch (error) {
+        next(error)
+    }
+} 
+
+module.exports = { getAllUsers, getAllContacts , deleteUserById, getUserByID, updateUserById}
