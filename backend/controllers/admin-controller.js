@@ -18,8 +18,8 @@ const getAllContacts = async (req, res) => {
     try {
         const contacts = await Contact.find();
 
-        if(!contacts || contacts.length === 0) {
-            return res.status(404).json({message: "No Contacts Found"})
+        if (!contacts || contacts.length === 0) {
+            return res.status(404).json({ message: "No Contacts Found" })
         }
         return res.status(200).json(contacts)
     } catch (error) {
@@ -27,12 +27,12 @@ const getAllContacts = async (req, res) => {
     }
 }
 
-const updateUserById = async (req,res) => {
+const updateUserById = async (req, res) => {
     try {
         const id = req.params.id;
         const updatedUserData = req.body;
 
-        const updatedData = await User.updateOne({_id:id}, {
+        const updatedData = await User.updateOne({ _id: id }, {
             $set: updatedUserData
         })
 
@@ -42,24 +42,34 @@ const updateUserById = async (req,res) => {
     }
 }
 
-const getUserByID = async (req,res ) => {
+const getUserByID = async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await User.findOne({_id: id}, {password: 0})
+        const data = await User.findOne({ _id: id }, { password: 0 })
         return res.status(200).json(data)
     } catch (error) {
         next(error)
     }
 }
 
-const deleteUserById = async (req,res) => {
+const deleteUserById = async (req, res) => {
     try {
         const id = req.params.id;
-        await User.deleteOne({_id: id});
-        return res.status(200).json({ message: 'User Delete Succesfully'});
+        await User.deleteOne({ _id: id });
+        return res.status(200).json({ message: 'User Delete Succesfully' });
     } catch (error) {
         next(error)
     }
-} 
+}
 
-module.exports = { getAllUsers, getAllContacts , deleteUserById, getUserByID, updateUserById}
+const deleteContactById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        await Contact.deleteOne({ _id: id })
+        return res.status(200).json({ message: "User Deleted Successfully" });
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports = { getAllUsers, getAllContacts, deleteUserById, getUserByID, updateUserById, deleteContactById }
