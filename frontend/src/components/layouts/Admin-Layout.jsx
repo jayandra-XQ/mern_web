@@ -3,9 +3,13 @@ import {FaUser} from 'react-icons/fa'
 import {FaHome} from 'react-icons/fa'
 import {FaMessage} from 'react-icons/fa6'
 import { FaRegListAlt } from 'react-icons/fa'
+import {useAuth} from '../../store/auth'
 
 
 const AdminLayout = () => {
+  const {user } = useAuth();
+  console.log('admin layout', user)
+
   return (
     <>
       <header>

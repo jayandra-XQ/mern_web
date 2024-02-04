@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }) => {
             const response = await fetch("http://localhost:5000/api/auth/user", {
                 method: 'GET',
                 headers: {
-                    'Authorization': authorizationToken,
-                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+
                 },
             })
 
@@ -40,9 +40,12 @@ export const AuthProvider = ({ children }) => {
                 const data = await response.json();
                 setUser(data.userData)
 
+            } else {
+                console.error("Error fetching user data")
+
             }
         } catch (error) {
-            console.error("Error fetching user data")
+            console.log(error)
         }
     };
 
